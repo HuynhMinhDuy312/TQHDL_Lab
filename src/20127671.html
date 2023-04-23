@@ -1,6 +1,7 @@
 <!doctype html>
 <html>
 <head>
+    <link rel="stylesheet" href="../assets/19127374-styles.css" />
     <style>
         .highlight {
             fill: orange;
@@ -10,185 +11,206 @@
     <!-- <script src="./js/d3.v7.min.js"></script> -->
 </head>
 <body>
-<svg width="1000" height="600"></svg>
-<script>
+    <div class="header">
+        <div class="group-title">Group 6 - Lab Project</div>
+        <div class="option">
+            <a href="./index.html" class="option-btn">Home</a>
+            <p class="isolate-line">|</p>
+            <a href="./19127374.html" class="option-btn">Duy</a>
+            <p class="isolate-line">|</p>
+            <a href="./19127374.html" class="option-btn">Hải</a>
+            <p class="isolate-line">|</p>
+            <a href="./20127671.html" class="option-btn">Vương</a>
+            <p class="isolate-line">|</p>
+            <a href="./19127374.html" class="option-btn">Ngân</a>
+            <p class="isolate-line">|</p>
+            <a href="./20127436.html" class="option-btn">Ân</a>
+        </div>
+    </div>
+    </div>
+    <div class="line-break"></div>
+    <div class="my-info">
+        <h2>20127671 - Phạm Quốc vương</h2>
+    </div>
+    <svg width="1000" height="600"></svg>
+    <script>
 
-    var svg = d3.select("svg"),
-        margin = 200,
-        width = svg.attr("width") - margin,
-        height = svg.attr("height") - margin;
+        var svg = d3.select("svg"),
+            margin = 200,
+            width = svg.attr("width") - margin,
+            height = svg.attr("height") - margin;
 
-    svg.append("text")
-       .attr("transform", "translate(100,0)")
-       .attr("x", 50)
-       .attr("y", 50)
-       .attr("font-size", "24px")
-       .text("Thống Kê Avg_Open_To_Buy Của Khách Hàng Theo Từng Loại Thu Nhập")
+        svg.append("text")
+        .attr("transform", "translate(100,0)")
+        .attr("x", 50)
+        .attr("y", 50)
+        .attr("font-size", "24px")
+        .text("Thống Kê Avg_Open_To_Buy Của Khách Hàng Theo Từng Loại Thu Nhập")
 
-    var x = d3.scaleBand().range([0, width ]).padding(0.4),
-        y = d3.scaleLinear().range([height, 0]);
+        var x = d3.scaleBand().range([0, width ]).padding(0.4),
+            y = d3.scaleLinear().range([height, 0]);
 
-    var g = svg.append("g")
-            .attr("transform", "translate(" + 100 + "," + 100 + ")");
+        var g = svg.append("g")
+                .attr("transform", "translate(" + 100 + "," + 100 + ")");
 
 
-    d3.csv("./data/20127671/data_AOTB.csv").then(function(data) {
-        x.domain(data.map(function(d) { return d.Income_Category; }));
-        // y.domain([0, d3.max(data, function(d) { return d.Avg_Open_To_Buy; })]);
-        y.domain([0, Math.max(...data.map(o => o.Avg_Open_To_Buy))]);
-        
-
-        g.append("g")
-         .attr("transform", "translate(0," + height + ")")
-         .call(d3.axisBottom(x))
-         .append("text")
-         .attr("y", height - 350)
-         .attr("x", width )
-         .attr("text-anchor", "end")
-         .attr("stroke", "black")
-         .text("Loại Thu Nhập");
-
-        g.append("g")
-         .call(d3.axisLeft(y).tickFormat(function(d){
-             return "$" + d;
-         }).ticks(10))
-         .append("text")
-         .attr("transform", "rotate(-90)")
-         .attr("y", 9)
-         .attr("dy", "-7.1em")
-         .attr("text-anchor", "end")
-         .attr("stroke", "black")
-         .text("Avg Open To Buy");
-
-         //step 3:
-        g.selectAll(".bar")
-         .data(data)
-         .enter().append("rect")
-         .attr("class", "bar")
-		 //thêm sự kiện
-         .on("mouseover", onMouseOver) //Add listener for the mouseover event
-         .on("mouseout", onMouseOut)   //Add listener for the mouseout event
-
-		 .attr("x", function(d) { return x(d.Income_Category); })
-         .attr("y", function(d) { return y(d.Avg_Open_To_Buy); })
-         .attr("width", x.bandwidth())
-         .transition() //thêm animation
-         .ease(d3.easeLinear)
-         .duration(400)
-         .delay(function (d, i) {
-             return i * 10;
-         })
-         .attr("height", function(d) { return height - y(d.Avg_Open_To_Buy); });
-
-         //fill color for bar    
-        let numbar = document.getElementsByClassName("bar");
-        let max_color = Math.max(...data.map(d => d.Count));
-        let min_color = Math.min(...data.map(d => d.Count));
-        let gap = 200 / (max_color - min_color); 
-        let tb_color = [];
-        let fillColor
-        for(let i = numbar.length - 1 ; i >= 0 ; i--) {
-            if(parseInt(data[i].Count) >= max_color){
+        d3.csv("./data/20127671/data_AOTB.csv").then(function(data) {
+            x.domain(data.map(function(d) { return d.Income_Category; }));
+            // y.domain([0, d3.max(data, function(d) { return d.Avg_Open_To_Buy; })]);
+            y.domain([0, Math.max(...data.map(o => o.Avg_Open_To_Buy))]);
             
-                fillColor = "rgb(0, 0, 255)";
+
+            g.append("g")
+            .attr("transform", "translate(0," + height + ")")
+            .call(d3.axisBottom(x))
+            .append("text")
+            .attr("y", height - 350)
+            .attr("x", width )
+            .attr("text-anchor", "end")
+            .attr("stroke", "black")
+            .text("Loại Thu Nhập");
+
+            g.append("g")
+            .call(d3.axisLeft(y).tickFormat(function(d){
+                return "$" + d;
+            }).ticks(10))
+            .append("text")
+            .attr("transform", "rotate(-90)")
+            .attr("y", 9)
+            .attr("dy", "-7.1em")
+            .attr("text-anchor", "end")
+            .attr("stroke", "black")
+            .text("Avg Open To Buy");
+
+            //step 3:
+            g.selectAll(".bar")
+            .data(data)
+            .enter().append("rect")
+            .attr("class", "bar")
+            //thêm sự kiện
+            .on("mouseover", onMouseOver) //Add listener for the mouseover event
+            .on("mouseout", onMouseOut)   //Add listener for the mouseout event
+
+            .attr("x", function(d) { return x(d.Income_Category); })
+            .attr("y", function(d) { return y(d.Avg_Open_To_Buy); })
+            .attr("width", x.bandwidth())
+            .transition() //thêm animation
+            .ease(d3.easeLinear)
+            .duration(400)
+            .delay(function (d, i) {
+                return i * 10;
+            })
+            .attr("height", function(d) { return height - y(d.Avg_Open_To_Buy); });
+
+            //fill color for bar    
+            let numbar = document.getElementsByClassName("bar");
+            let max_color = Math.max(...data.map(d => d.Count));
+            let min_color = Math.min(...data.map(d => d.Count));
+            let gap = 200 / (max_color - min_color); 
+            let tb_color = [];
+            let fillColor
+            for(let i = numbar.length - 1 ; i >= 0 ; i--) {
+                if(parseInt(data[i].Count) >= max_color){
+                
+                    fillColor = "rgb(0, 0, 255)";
+                }
+                else if(parseInt(data[i].Count) <= min_color){
+                    fillColor = "rgb(0, 200, 255)";
+                }
+                else{
+                    let increase = parseInt((max_color - parseInt(data[i].Count) ) * gap) ;
+                    fillColor = "rgb(0, " + increase + ", 255)";
+                }
+                numbar[i].setAttribute("fill", fillColor)
+                // console.log("Count: ", data[i].Count, data[i].Income_Category, data[i].Avg_Open_To_Buy, numbar[i])
+                let obj_color = {
+                    "Count": data[i].Count,
+                    "Color": fillColor
+                }
+                tb_color.push(obj_color);
             }
-            else if(parseInt(data[i].Count) <= min_color){
-                fillColor = "rgb(0, 200, 255)";
-            }
-            else{
-                let increase = parseInt((max_color - parseInt(data[i].Count) ) * gap) ;
-                fillColor = "rgb(0, " + increase + ", 255)";
-            }
-            numbar[i].setAttribute("fill", fillColor)
-            // console.log("Count: ", data[i].Count, data[i].Income_Category, data[i].Avg_Open_To_Buy, numbar[i])
-            let obj_color = {
-                "Count": data[i].Count,
-                "Color": fillColor
-            }
-            tb_color.push(obj_color);
-        }
-        // addDecription(tb_color)
-        addDecription(tb_color.sort((a, b) => {
-            return a.Count - b.Count;
-        }))
-    })
+            // addDecription(tb_color)
+            addDecription(tb_color.sort((a, b) => {
+                return a.Count - b.Count;
+            }))
+        })
 
 
-// add decription table
-function addDecription(tb_color){
-    var table =  d3.select("svg")
-    .append("foreignObject")
-    .attr("x","150")
-    .attr("y","80")
-    .attr("width", 200)
-    .attr("height", 200)
-    .attr("class", "table")
-    .append("xhtml:table")
-    .style("border", "1px solid");
-
-    var headers = ["Số Lượng","Màu"];
-    var headerRow = table.append("thead").append("tr");
-    headerRow.selectAll("th")
-        .data(headers)
-        .enter()
-        .append("th")
-        .text(function(d) {return d;});
-
-    var rows = table.append("tbody").selectAll("tr")
-        .data(tb_color)
-        .enter()
-        .append("tr")
+    // add decription table
+    function addDecription(tb_color){
+        var table =  d3.select("svg")
+        .append("foreignObject")
+        .attr("x","150")
+        .attr("y","80")
+        .attr("width", 200)
+        .attr("height", 200)
+        .attr("class", "table")
+        .append("xhtml:table")
         .style("border", "1px solid");
-    rows.selectAll("td")
-        .data(function(d) { return [d.Count, d.Color]; })
-        .enter()
-        .append("td")
-        .style("background-color",function(d) { return d; })
-        .style("border", "1px solid")
-        .text(function(d) { return d; });
+
+        var headers = ["Số Lượng","Màu"];
+        var headerRow = table.append("thead").append("tr");
+        headerRow.selectAll("th")
+            .data(headers)
+            .enter()
+            .append("th")
+            .text(function(d) {return d;});
+
+        var rows = table.append("tbody").selectAll("tr")
+            .data(tb_color)
+            .enter()
+            .append("tr")
+            .style("border", "1px solid");
+        rows.selectAll("td")
+            .data(function(d) { return [d.Count, d.Color]; })
+            .enter()
+            .append("td")
+            .style("background-color",function(d) { return d; })
+            .style("border", "1px solid")
+            .text(function(d) { return d; });
+            
+    }
+
         
-}
+    // function animation
+        //mouseover event handler function
+        function onMouseOver(d, i) {
+            d3.select(this).attr('class', 'highlight');
+            d3.select(this)
+            .transition()     // adds animation
+            .duration(400)
+            .attr('width', x.bandwidth() + 5)
+            .attr("y", function(d) { return y(d.Avg_Open_To_Buy) - 10; })
+            .attr("height", function(d) { return height - y(d.Avg_Open_To_Buy) + 10; });
 
-    
-// function animation
-    //mouseover event handler function
-    function onMouseOver(d, i) {
-        d3.select(this).attr('class', 'highlight');
-        d3.select(this)
-          .transition()     // adds animation
-          .duration(400)
-          .attr('width', x.bandwidth() + 5)
-          .attr("y", function(d) { return y(d.Avg_Open_To_Buy) - 10; })
-          .attr("height", function(d) { return height - y(d.Avg_Open_To_Buy) + 10; });
+            g.append("text")
+            .attr('class', 'val') 
+            .attr('x', function() {
+                return x(i.Income_Category);
+            })
+            .attr('y', function() {
+                return y(i.Avg_Open_To_Buy) - 15;
+            })
+            .text(function() {
+                return [ '$' + (parseFloat(i.Avg_Open_To_Buy).toFixed(2)).toString() + ' - ' + i.Count];  // Value of the text
+            });
+        }
 
-        g.append("text")
-         .attr('class', 'val') 
-         .attr('x', function() {
-             return x(i.Income_Category);
-         })
-         .attr('y', function() {
-             return y(i.Avg_Open_To_Buy) - 15;
-         })
-         .text(function() {
-             return [ '$' + (parseFloat(i.Avg_Open_To_Buy).toFixed(2)).toString() + ' - ' + i.Count];  // Value of the text
-         });
-    }
+        //mouseout event handler function
+        function onMouseOut(d, i) {
+            // use the text label class to remove label on mouseout
+            d3.select(this).attr('class', 'bar');
+            d3.select(this)
+            .transition()     // adds animation
+            .duration(400)
+            .attr('width', x.bandwidth())
+            .attr("y", function(i) { return y(i.Avg_Open_To_Buy); })
+            .attr("height", function(i) { return height - y(i.Avg_Open_To_Buy); });
 
-    //mouseout event handler function
-    function onMouseOut(d, i) {
-        // use the text label class to remove label on mouseout
-        d3.select(this).attr('class', 'bar');
-        d3.select(this)
-          .transition()     // adds animation
-          .duration(400)
-          .attr('width', x.bandwidth())
-          .attr("y", function(i) { return y(i.Avg_Open_To_Buy); })
-          .attr("height", function(i) { return height - y(i.Avg_Open_To_Buy); });
+            d3.selectAll('.val')
+            .remove()
+        }
 
-        d3.selectAll('.val')
-          .remove()
-    }
-
-</script>
+    </script>
 </body>
 </html>

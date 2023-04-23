@@ -1,198 +1,232 @@
-<!doctype html>
+<!DOCTYPE html>
 <html>
-<head>
-    <style>
-        .highlight {
-            fill: rgb(255, 0, 200);
-        }
-</style>
-    <script src="https://d3js.org/d3.v4.min.js"></script>
-</head>
-<body>
-<svg width="600" height="600"></svg>
-<script>
-
-    var svg = d3.select("svg"),
-        margin = 150,
-        width = svg.attr("width") - margin,
-        height = svg.attr("height") - margin;
-
-    svg.append("text")
-       .attr("transform", "translate(100,0)")
-       .attr("x", 50)
-       .attr("y", 50)
-       .attr("font-size", "25px")
-       .text("Thống kê hạn mức tín dụng trung bình")
-
-
-    var x = d3.scaleBand().range([0, width]).padding(0.4),
-        y = d3.scaleLinear().range([height, 0]);
-    //var barwidth = x(4) - x(3);
-    var g = svg.append("g")
-            .attr("transform", "translate(" + 100 + "," + 100 + ")");
-
-    d3.csv("/src/data/20127570/data_20127570_lab.csv", function(error, data) {
-        if (error) {
-            throw error;
-        }
-
-        //GÁN GIÁ TRỊ CHO TRỤC X
-        var UAge = data.map(d => Math.floor((d.Customer_Age) / 10) * 10); //chứa giá trị của nhóm tuổi
-
-        var age_U3456 = UAge.filter((value, index, self) => {
-             return self.indexOf(value) === index && value !== 20 && value !== 70;
-        }); //loại bỏ giá trị trùng lắp của các nhóm tuổi
-        
-        age_U3456.sort((a, b) => a - b); //sắp xếp tăng dần các nhóm tuổi
-        x.domain(age_U3456);
-        
-
-        //GÁN GIÁ TRỊ CHO TRỤC Y
-        var ageLimitPairs = data.map(function(d) {
-            return { age: +d.Customer_Age, limit: +d.Credit_Limit };
-        });
-        
-        let sum = new Array(4).fill(0);
-        let amountLimit = new Array(4).fill(0);
-        for (var i = 0; i < ageLimitPairs.length;i++){ //thực hiện tính tổng từng credit limit của mỗi nhóm tuổi
-            if (ageLimitPairs[i].age >= 30 && ageLimitPairs[i].age <40){
-                amountLimit[0] += 1
-                sum[0] += ageLimitPairs[i].limit
+    <head>
+        <style>
+            .highlight {
+                fill: rgb(255, 0, 200);
             }
-            else if (ageLimitPairs[i].age >=40 && ageLimitPairs[i].age <50){
-                amountLimit[1] += 1
-                sum[1] += ageLimitPairs[i].limit
+        </style>
+        <link rel="stylesheet" href="../assets/19127374-styles.css" />
+        <script src="https://d3js.org/d3.v4.min.js"></script>
+    </head>
+    <body>
+        <div class="header">
+            <div class="group-title">Group 6 - Lab Project</div>
+            <div class="option">
+                <a href="./index.html" class="option-btn">Home</a>
+                <p class="isolate-line">|</p>
+                <a href="./19127374.html" class="option-btn">Duy</a>
+                <p class="isolate-line">|</p>
+                <a href="./19127386.html" class="option-btn">Hải</a>
+                <p class="isolate-line">|</p>
+                <a href="./20127671.html" class="option-btn">Vương</a>
+                <p class="isolate-line">|</p>
+                <a href="./20127570.html" class="option-btn">Ngân</a>
+                <p class="isolate-line">|</p>
+                <a href="./20127436.html" class="option-btn">Ân</a>
+            </div>
+        </div>
+        </div>
+        <div class="line-break"></div>
+        <div class="my-info">
+            <h2>20127570 - Võ Thị Kim Ngân</h2>
+        </div>
+        <svg width="600" height="600"></svg>
+        <script>
+            var svg = d3.select("svg"),
+                margin = 150,
+                width = svg.attr("width") - margin,
+                height = svg.attr("height") - margin;
+
+            svg.append("text")
+                .attr("transform", "translate(100,0)")
+                .attr("x", 50)
+                .attr("y", 50)
+                .attr("font-size", "25px")
+                .text("Thống kê hạn mức tín dụng trung bình");
+
+            var x = d3.scaleBand().range([0, width]).padding(0.4),
+                y = d3.scaleLinear().range([height, 0]);
+            //var barwidth = x(4) - x(3);
+            var g = svg.append("g").attr("transform", "translate(" + 100 + "," + 100 + ")");
+
+            d3.csv("/src/data/20127570/data_20127570_lab.csv", function (error, data) {
+                if (error) {
+                    throw error;
+                }
+
+                //GÁN GIÁ TRỊ CHO TRỤC X
+                var UAge = data.map((d) => Math.floor(d.Customer_Age / 10) * 10); //chứa giá trị của nhóm tuổi
+
+                var age_U3456 = UAge.filter((value, index, self) => {
+                    return self.indexOf(value) === index && value !== 20 && value !== 70;
+                }); //loại bỏ giá trị trùng lắp của các nhóm tuổi
+
+                age_U3456.sort((a, b) => a - b); //sắp xếp tăng dần các nhóm tuổi
+                x.domain(age_U3456);
+
+                //GÁN GIÁ TRỊ CHO TRỤC Y
+                var ageLimitPairs = data.map(function (d) {
+                    return { age: +d.Customer_Age, limit: +d.Credit_Limit };
+                });
+
+                let sum = new Array(4).fill(0);
+                let amountLimit = new Array(4).fill(0);
+                for (var i = 0; i < ageLimitPairs.length; i++) {
+                    //thực hiện tính tổng từng credit limit của mỗi nhóm tuổi
+                    if (ageLimitPairs[i].age >= 30 && ageLimitPairs[i].age < 40) {
+                        amountLimit[0] += 1;
+                        sum[0] += ageLimitPairs[i].limit;
+                    } else if (ageLimitPairs[i].age >= 40 && ageLimitPairs[i].age < 50) {
+                        amountLimit[1] += 1;
+                        sum[1] += ageLimitPairs[i].limit;
+                    } else if (ageLimitPairs[i].age >= 50 && ageLimitPairs[i].age < 60) {
+                        amountLimit[2] += 1;
+                        sum[2] += ageLimitPairs[i].limit;
+                    } else if (ageLimitPairs[i].age >= 60 && ageLimitPairs[i].age < 70) {
+                        amountLimit[3] += 1;
+                        sum[3] += ageLimitPairs[i].limit;
+                    }
+                }
+                var avgLimit = []; //chứa giá trị trung bình của credit limit theo nhóm tuổi
+                sum.forEach((element, index) => {
+                    avgLimit.push((element / amountLimit[index]).toFixed(2));
+                });
+
+                y.domain([0, Math.max(...avgLimit) + 1000]);
+
+                //ĐẶT TÊN CHO MỖI TRỤC
+                g.append("g")
+                    .attr("transform", "translate(0," + height + ")")
+                    .call(
+                        d3
+                            .axisBottom(x)
+                            .tickFormat(function (d) {
+                                return "U" + d;
+                            })
+                            .ticks(5)
+                    )
+                    .append("text")
+                    .attr("y", height - 430)
+                    .attr("x", width + 50)
+                    .attr("text-anchor", "end")
+                    .attr("stroke", "black")
+                    .text("Group Age");
+
+                g.append("g")
+                    .call(
+                        d3
+                            .axisLeft(y)
+                            .tickFormat(function (d) {
+                                return "$" + d;
+                            })
+                            .ticks(10)
+                    )
+                    .append("text")
+                    .attr("transform", "rotate(0)")
+                    .attr("y", 10)
+                    .attr("x", width - 440)
+                    .attr("dy", "-2em")
+                    .attr("text-anchor", "end")
+                    .attr("stroke", "black")
+                    .text("Average of Credit Limit");
+
+                var new_data = [];
+
+                for (var i = 0; i < age_U3456.length; i++) {
+                    var obj = {
+                        age: age_U3456[i],
+                        credit_limit: avgLimit[i],
+                    };
+                    new_data.push(obj);
+                }
+                console.log(new_data);
+                //step 3:
+                g.selectAll(".bar")
+                    .data(new_data)
+                    .enter()
+                    .append("rect")
+                    //  .attr("class", "bar-color")
+                    //thêm sự kiện
+                    .on("mouseover", onMouseOver) //Add listener for the mouseover event
+                    .on("mouseout", onMouseOut) //Add listener for the mouseout event
+
+                    .attr("x", function (d) {
+                        return x(d.age);
+                    })
+                    .attr("y", function (d) {
+                        return y(d.credit_limit);
+                    })
+                    .attr("width", x.bandwidth())
+                    .transition() //thêm animation
+                    .ease(d3.easeLinear)
+                    .duration(400)
+                    .delay(function (d, i) {
+                        return i * 50;
+                    })
+                    .attr("height", function (d) {
+                        return height - y(d.credit_limit);
+                    });
+
+                var rects = document.getElementsByTagName("rect");
+                for (var i = 0; i < rects.length; i++) {
+                    if (i == 0) {
+                        rects[i].setAttribute("fill", " rgb(197, 62, 62)");
+                    } else if (i == 1) {
+                        rects[i].setAttribute("fill", "blue");
+                    } else if (i == 2) {
+                        rects[i].setAttribute("fill", "green");
+                    } else {
+                        rects[i].setAttribute("fill", "orange");
+                    }
+                }
+            });
+
+            //mouseover event handler function
+            function onMouseOver(d, i) {
+                d3.select(this).attr("class", "highlight");
+                d3.select(this)
+                    .transition() // adds animation
+                    .duration(400)
+                    .attr("width", x.bandwidth() + 5)
+                    .attr("y", function (d) {
+                        return y(d.credit_limit) - 10;
+                    })
+                    .attr("height", function (d) {
+                        return height - y(d.credit_limit) + 10;
+                    });
+
+                g.append("text")
+                    .attr("font-size", "18px")
+                    .attr("class", "val")
+                    .attr("x", function () {
+                        return x(d.age);
+                    })
+                    .attr("y", function () {
+                        return y(d.credit_limit) - 15;
+                    })
+                    .text(function () {
+                        return ["$" + d.credit_limit]; // value of the text
+                    });
             }
-            else if (ageLimitPairs[i].age >=50 && ageLimitPairs[i].age <60){
-                amountLimit[2] += 1
-                sum[2] += ageLimitPairs[i].limit
+
+            //mouseout event handler function
+            function onMouseOut(d, i) {
+                // use the text label class to remove label on mouseout
+                d3.select(this).attr("class", "bar-color");
+                d3.select(this)
+                    .transition() // adds animation
+                    .duration(400)
+                    .attr("width", x.bandwidth())
+                    .attr("y", function (d) {
+                        return y(d.credit_limit);
+                    })
+                    .attr("height", function (d) {
+                        return height - y(d.credit_limit);
+                    });
+
+                d3.selectAll(".val").remove();
             }
-            else if (ageLimitPairs[i].age >=60 && ageLimitPairs[i].age <70){
-                amountLimit[3] += 1
-                sum[3] += ageLimitPairs[i].limit
-            }
-        }
-        var avgLimit = [] //chứa giá trị trung bình của credit limit theo nhóm tuổi
-        sum.forEach((element, index) => {
-            avgLimit.push((element / amountLimit[index]).toFixed(2)) 
-        }) 
-
-		y.domain([0, Math.max(...avgLimit) + 1000]);
-        
-
-        //ĐẶT TÊN CHO MỖI TRỤC
-        g.append("g")
-         .attr("transform", "translate(0," + height + ")")
-		 .call(d3.axisBottom(x).tickFormat(function(d){
-             return "U" + d;
-         }).ticks(5))
-		 .append("text")
-		 .attr("y", height - 430)
-		 .attr("x", width + 50)
-		 .attr("text-anchor", "end")
-		 .attr("stroke", "black")
-		 .text("Group Age");
-
-        g.append("g")
-         .call(d3.axisLeft(y).tickFormat(function(d){
-             return "$" + d;
-         }).ticks(10))
-         .append("text")
-         .attr("transform", "rotate(0)")
-         .attr("y", 10)
-         .attr("x", width -440)
-         .attr("dy", "-2em")
-         .attr("text-anchor", "end")
-         .attr("stroke", "black")
-         .text("Average of Credit Limit");
-        
-         var new_data = [];
-
-        for (var i = 0; i < age_U3456.length; i++) {
-            var obj = {
-                age: age_U3456[i],
-                credit_limit: avgLimit[i]
-            };
-            new_data.push(obj);
-        }
-        console.log(new_data);
-		//step 3:
-        g.selectAll(".bar")
-         .data(new_data)
-         .enter().append("rect")
-        //  .attr("class", "bar-color")
-		 //thêm sự kiện
-         .on("mouseover", onMouseOver) //Add listener for the mouseover event
-         .on("mouseout", onMouseOut)   //Add listener for the mouseout event
-         
-		 .attr('x', function(d) {return x(d.age);})
-         .attr("y", function(d) {return y(d.credit_limit);})
-         .attr("width", x.bandwidth())
-         .transition() //thêm animation
-         .ease(d3.easeLinear)
-         .duration(400)
-         .delay(function (d, i) {
-             return i * 50;
-         })
-         .attr("height", function(d) {return height - y(d.credit_limit);});
-        
-        
-
-        var rects = document.getElementsByTagName("rect")
-        for (var i = 0; i < rects.length; i++) {
-            if (i == 0) {
-                rects[i].setAttribute("fill", " rgb(197, 62, 62)");
-            } else if (i == 1) {
-                rects[i].setAttribute("fill", "blue");
-            } else if (i == 2) {
-                rects[i].setAttribute("fill", "green");
-            } else {
-                rects[i].setAttribute("fill", "orange");
-            }
-        }
-    });
-
-    
-    
-    //mouseover event handler function
-    function onMouseOver(d, i) {
-        d3.select(this).attr('class', 'highlight');
-        d3.select(this)
-          .transition()     // adds animation
-          .duration(400)
-          .attr('width', x.bandwidth() + 5)
-          .attr("y", function(d) { return y(d.credit_limit) - 10; })
-          .attr("height", function(d) { return height - y(d.credit_limit) + 10; });
-
-        g.append("text")
-         .attr("font-size","18px")
-         .attr('class', 'val') 
-         .attr('x', function() {
-             return x(d.age);
-         })
-         .attr('y', function() {
-             return y(d.credit_limit) - 15;
-         })
-         .text(function() {
-             return [ '$' + d.credit_limit];  // value of the text
-         });
-    }
-
-    //mouseout event handler function
-    function onMouseOut(d, i) {
-        // use the text label class to remove label on mouseout
-        d3.select(this).attr('class', 'bar-color');
-        d3.select(this)
-          .transition()     // adds animation
-          .duration(400)
-          .attr('width', x.bandwidth())
-          .attr("y", function(d) { return y(d.credit_limit); })
-          .attr("height", function(d) { return height - y(d.credit_limit); });
-
-        d3.selectAll('.val')
-          .remove()
-    }
-
-</script>
-</body>
+        </script>
+    </body>
 </html>

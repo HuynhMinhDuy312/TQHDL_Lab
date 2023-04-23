@@ -1,0 +1,121 @@
+﻿<!--
+    For some reason, my device can't run this code normally.
+    I had to do these steps to successfully execute it:
+    1. Open command prompt
+    2. Run this string: "C:\Program Files\Google\Chrome\Application\chrome.exe" --disable-web-security --user-data-dir=~/chromeTempRepo
+    3. A  chrome.without.security.thingy  browser will appear
+    4. Use "View in browser" to execute this code in the mentioned browser
+-->
+
+<!DOCTYPE html>
+<html lang="en" xmlns="https://www.w3.org/1999/xhtml">
+    <head>
+        <meta charset="utf-8" />
+        <title>NO TITLE</title>
+        <script src="https://d3js.org/d3.v4.min.js"></script>
+        <!-- create a div where graph will take place -->
+    </head>
+    <bedy style="background-color: lightgray">
+        <!--<h1>AAA</h1>
+            <p style="font-style: italic;color: purple"><b>aaa</b><br />men</p>-->
+        <div id="temp"></div>
+        <script>
+            // set the dimensions and margins of the graph
+            var margin = { top: 50, right: 40, bottom: 90, left: 70 },
+                width = 460 - margin.left - margin.right,
+                height = 500 - margin.top - margin.bottom;
+
+            // append the svg object to the body of the page
+            var svg = d3
+                .select("#temp")
+                .append("svg")
+                .attr("width", width + margin.left + margin.right)
+                .attr("height", height + margin.top + margin.bottom)
+                .append("g")
+                .attr("transform", "translate(" + margin.left + "," + margin.top + ")");
+
+            // ***NOTE: The temp2.csv file might use a DIFFERENT path on your device!
+            // Parse the Data
+            d3.csv("./data/temp2.csv", function (data) {
+                // X axis
+                var x = d3
+                    .scaleBand()
+                    .range([0, width])
+                    .domain(
+                        data.map(function (d) {
+                            return d.CardCategory;
+                        })
+                    )
+                    .padding(0.4);
+                svg.append("g")
+                    .attr("transform", "translate(0," + height + ")")
+                    .call(d3.axisBottom(x))
+                    .selectAll("text")
+                    .attr("transform", "translate(9,5)rotate(-0)")
+                    .style("text-anchor", "end");
+
+                // Add Y axis
+                var y = d3.scaleLinear().domain([30, 100]).range([height, 0]);
+                svg.append("g").call(d3.axisLeft(y));
+                svg.append("text")
+                    .attr("x", margin.right - 90)
+                    .attr("y", margin.top - 70)
+                    .text("AVG transaction count");
+
+                // Bars
+                svg.selectAll("mybar")
+                    .data(data)
+                    .enter()
+                    .append("rect")
+                    .attr("class", "bar")
+                    .on("mouseover", onMouseOver)
+                    .on("mouseout", onMouseOut)
+                    .attr("x", function (d) {
+                        return x(d.CardCategory);
+                    })
+                    .attr("y", function (d) {
+                        return y(d.AVG_Total_Transaction_Count);
+                    })
+                    .attr("width", x.bandwidth())
+                    .transition()
+                    .ease(d3.easeLinear)
+                    .duration(400)
+                    .delay(function (d, i) {
+                        return i * 50;
+                    })
+                    .attr("height", function (d) {
+                        return height - y(d.AVG_Total_Transaction_Count);
+                    })
+                    .attr("fill", "black");
+
+                function onMouseOver(d, i) {
+                    d3.select(this).attr("class", "highlight");
+                    d3.select(this).transition().duration(400).attr("fill", "orange");
+
+                    svg.append("text")
+                        .attr("class", "val")
+                        .attr("x", function () {
+                            return x(d.CardCategory) + 15;
+                        })
+                        .attr("y", function () {
+                            return y(d.AVG_Total_Transaction_Count) - 15;
+                        })
+                        .text(function () {
+                            return d.AVG_Total_Transaction_Count;
+                        });
+                }
+
+                function onMouseOut(d, i) {
+                    d3.select(this).attr("class", "highlight");
+                    d3.select(this).transition().duration(400).attr("fill", "black");
+
+                    d3.selectAll(".val").remove();
+                }
+            });
+
+            d3.select("#temp")
+                .append("p")
+                .text("TASK: Assess the total transaction count of each card category.");
+        </script>
+    </bedy>
+</html>

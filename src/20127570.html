@@ -40,11 +40,11 @@
                 height = svg.attr("height") - margin;
 
             svg.append("text")
-                .attr("transform", "translate(100,0)")
+                .attr("transform", "translate(40,0)")
                 .attr("x", 50)
                 .attr("y", 50)
-                .attr("font-size", "25px")
-                .text("Thống kê hạn mức tín dụng trung bình");
+                .attr("font-size", "20px")
+                .text("Thống kê hạn mức tín dụng trung bình ở các nhóm tuổi");
 
             var x = d3.scaleBand().range([0, width]).padding(0.4),
                 y = d3.scaleLinear().range([height, 0]);
